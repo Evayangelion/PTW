@@ -1,0 +1,8 @@
+SHA1：0A:44:F3:27:5E:06:34:36:46:B6:86:3C:CD:12:36:9A:47:64:64:1C
+key：5bf5d949731fd058e45b7fc4441c4ede
+20181227推倒重建
+动态权限申请！
+
+
+android 的用户界面一般使用xml文件做的，对应的xml文件在layout包下。
+如果xml里放了个按钮什么的，在activity中要获取该按钮就用 findViewById(R.id.xml文件中对应的id)。
