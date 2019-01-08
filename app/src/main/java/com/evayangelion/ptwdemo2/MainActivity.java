@@ -32,23 +32,36 @@ public class MainActivity extends AppCompatActivity implements LocationSource,
 
     private TextView mLocationErrText;
 
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+
+
         setContentView(R.layout.activity_main);
         //获取地图控件的引用。
         mapView = (MapView) findViewById(R.id.map);
         mapView.onCreate(savedInstanceState);// 此方法必须重写
 
+
         init();
     }
+
+
+
 
     /**
      * 初始化
      */
     private void init() {
+        //判断aMap对象情况
+
         if (aMap == null) {
             aMap = mapView.getMap();
+            //设置地图样式
+            aMap.setMapType(AMap.MAP_TYPE_NIGHT);
             setUpMap();
         }
         //复选框组合
@@ -60,15 +73,17 @@ public class MainActivity extends AppCompatActivity implements LocationSource,
     }
 
     /**
-     * 设置一些amap的属性
+     * 设置一些aMap的属性
      */
     private void setUpMap() {
 
         aMap.setLocationSource(this);// 设置定位监听
-        aMap.getUiSettings().setMyLocationButtonEnabled(true);// 设置默认定位按钮是否显示
+        aMap.getUiSettings().setMyLocationButtonEnabled(true);// 设置右上角定位按钮是否显示
         aMap.setMyLocationEnabled(true);// 设置为true表示显示定位层并可触发定位，false表示隐藏定位层并不可触发定位，默认是false
         // 设置定位的类型为定位模式 ，可以由定位、跟随或地图根据面向方向旋转几种
         aMap.setMyLocationType(AMap.LOCATION_TYPE_LOCATE);
+
+
     }
 
     @Override
@@ -85,6 +100,8 @@ public class MainActivity extends AppCompatActivity implements LocationSource,
                 break;
             case R.id.gps_rotate_button:
                 // 设置定位的类型为根据地图面向方向旋转
+
+
                 aMap.setMyLocationType(AMap.LOCATION_TYPE_MAP_ROTATE);
                 break;
         }
@@ -140,6 +157,13 @@ public class MainActivity extends AppCompatActivity implements LocationSource,
             if (amapLocation != null
                     && amapLocation.getErrorCode() == 0) {
                 mLocationErrText.setVisibility(View.GONE);
+
+                //Toast.makeText(MainActivity.this,"SHISHI",Toast.LENGTH_SHORT).show();
+                Log.d("===经度：",""+amapLocation.getLongitude());
+                Log.d("===纬度：",""+amapLocation.getLatitude());
+
+
+
                 mListener.onLocationChanged(amapLocation);// 显示系统小蓝点
             } else {
                 String errText = "定位失败," + amapLocation.getErrorCode()+ ": " + amapLocation.getErrorInfo();
@@ -189,7 +213,7 @@ public class MainActivity extends AppCompatActivity implements LocationSource,
 
 
 
-    }
+}
 
 
 

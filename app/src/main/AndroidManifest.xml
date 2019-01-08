@@ -45,6 +45,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
 
+        //使用定位服务要加上
         <service android:name="com.amap.api.location.APSService"></service>
 
         <activity android:name=".MainActivity">
