@@ -1,5 +1,6 @@
 package com.evayangelion.ptwdemo2;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -12,8 +13,11 @@ import com.amap.api.location.AMapLocationClient;
 import com.amap.api.location.AMapLocationClientOption;
 import com.amap.api.location.AMapLocationListener;
 import com.amap.api.maps.AMap;
+import com.amap.api.maps.CameraUpdateFactory;
 import com.amap.api.maps.LocationSource;
 import com.amap.api.maps.MapView;
+import com.amap.api.maps.model.LatLng;
+import com.amap.api.maps.model.PolylineOptions;
 
 
 public class MainActivity extends AppCompatActivity implements LocationSource,
@@ -24,6 +28,13 @@ public class MainActivity extends AppCompatActivity implements LocationSource,
     //创建一个高德地图对象
     private MapView mapView;
     //MapView 是AndroidView的子类，是一个地图容器，用于加载地图。LHT
+
+    private boolean isFirstLatLng;
+    //判断是不是第一次定位
+    private LatLng oldLatLng;
+    //多次定位中以前的定位点：
+
+
 
     private OnLocationChangedListener mListener;//定位监听器
     private AMapLocationClient mlocationClient;//定位发起端
@@ -44,7 +55,7 @@ public class MainActivity extends AppCompatActivity implements LocationSource,
         //获取地图控件的引用。
         mapView = (MapView) findViewById(R.id.map);
         mapView.onCreate(savedInstanceState);// 此方法必须重写
-
+        isFirstLatLng=true;
 
         init();
     }
@@ -62,7 +73,6 @@ public class MainActivity extends AppCompatActivity implements LocationSource,
             aMap = mapView.getMap();
             //设置地图样式
             aMap.setMapType(AMap.MAP_TYPE_NIGHT);
-            setUpMap();
         }
         //复选框组合
         mGPSModeGroup = (RadioGroup) findViewById(R.id.gps_radio_group);
@@ -70,20 +80,22 @@ public class MainActivity extends AppCompatActivity implements LocationSource,
 
         mLocationErrText = (TextView)findViewById(R.id.location_errInfo_text);
         mLocationErrText.setVisibility(View.GONE);
-    }
 
-    /**
-     * 设置一些aMap的属性
-     */
-    private void setUpMap() {
+        aMap.getUiSettings().setZoomControlsEnabled(false);
 
         aMap.setLocationSource(this);// 设置定位监听
         aMap.getUiSettings().setMyLocationButtonEnabled(true);// 设置右上角定位按钮是否显示
         aMap.setMyLocationEnabled(true);// 设置为true表示显示定位层并可触发定位，false表示隐藏定位层并不可触发定位，默认是false
         // 设置定位的类型为定位模式 ，可以由定位、跟随或地图根据面向方向旋转几种
         aMap.setMyLocationType(AMap.LOCATION_TYPE_LOCATE);
+    }
 
-
+    /**
+     * 设置一些aMap的属性
+     */
+    private void setUpMap(LatLng oldl,LatLng newl) {
+        aMap.addPolyline((new PolylineOptions()).
+                add(oldl,newl).geodesic(true).color(Color.GREEN));
     }
 
     @Override
@@ -93,14 +105,19 @@ public class MainActivity extends AppCompatActivity implements LocationSource,
             case R.id.gps_locate_button:
                 // 设置定位的类型为定位模式
                 aMap.setMyLocationType(AMap.LOCATION_TYPE_LOCATE);
+                aMap.moveCamera(CameraUpdateFactory.zoomTo(13));
+
                 break;
             case R.id.gps_follow_button:
                 // 设置定位的类型为 跟随模式
+                aMap.moveCamera(CameraUpdateFactory.zoomTo(17));
+
                 aMap.setMyLocationType(AMap.LOCATION_TYPE_MAP_FOLLOW);
                 break;
             case R.id.gps_rotate_button:
                 // 设置定位的类型为根据地图面向方向旋转
 
+                aMap.moveCamera(CameraUpdateFactory.zoomTo(6));
 
                 aMap.setMyLocationType(AMap.LOCATION_TYPE_MAP_ROTATE);
                 break;
@@ -159,13 +176,26 @@ public class MainActivity extends AppCompatActivity implements LocationSource,
                 mLocationErrText.setVisibility(View.GONE);
 
                 //Toast.makeText(MainActivity.this,"SHISHI",Toast.LENGTH_SHORT).show();
-                Log.d("===经度：",""+amapLocation.getLongitude());
                 Log.d("===纬度：",""+amapLocation.getLatitude());
+                Log.d("===经度：",""+amapLocation.getLongitude());
 
-
-
+                //新建一个经纬度对象 保存当前的经纬度内容
+                LatLng newLatLng =new LatLng(amapLocation.getLatitude(),amapLocation.getLongitude());
                 mListener.onLocationChanged(amapLocation);// 显示系统小蓝点
-            } else {
+
+                if(isFirstLatLng){
+                    oldLatLng=newLatLng;
+                    isFirstLatLng=false;
+                }
+                if(oldLatLng!=newLatLng){
+                    Log.e("Amap",+amapLocation.getLatitude()+","+amapLocation.getLongitude());
+                    setUpMap(oldLatLng,newLatLng);
+                    oldLatLng=newLatLng;
+
+                }
+
+            }
+            else {
                 String errText = "定位失败," + amapLocation.getErrorCode()+ ": " + amapLocation.getErrorInfo();
                 Log.e("AmapErr",errText);
                 mLocationErrText.setVisibility(View.VISIBLE);
