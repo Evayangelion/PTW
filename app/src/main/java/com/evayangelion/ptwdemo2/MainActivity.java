@@ -57,6 +57,8 @@ public class MainActivity extends AppCompatActivity implements LocationSource,
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        //隐藏标题栏
+        //requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_main);
         //获取地图控件的引用。
         mapView = (MapView) findViewById(R.id.map);
@@ -78,7 +80,14 @@ public class MainActivity extends AppCompatActivity implements LocationSource,
         if (aMap == null) {
             aMap = mapView.getMap();
             //设置地图样式
-            aMap.setMapType(AMap.MAP_TYPE_NIGHT);
+            //aMap.setMapType(AMap.MAP_TYPE_NIGHT);
+            //隐藏文字标注
+            aMap.setOnMapLoadedListener(new AMap.OnMapLoadedListener() {
+                @Override
+                public void onMapLoaded() {
+                    aMap.showMapText(false);
+                }
+            });
         }
         //复选框组合
         mGPSModeGroup = (RadioGroup) findViewById(R.id.gps_radio_group);
@@ -86,8 +95,10 @@ public class MainActivity extends AppCompatActivity implements LocationSource,
         mGPSModeGroup.setOnCheckedChangeListener(this);
 
         //文本框内容
+        //报错文本
         mLocationErrText = (TextView)findViewById(R.id.location_errInfo_text);
         mLocationErrText.setVisibility(View.GONE);
+        //距离计算文本
         getDistance=(TextView)findViewById(R.id.distance);
         getDistance.setVisibility(View.GONE);
 
@@ -97,6 +108,7 @@ public class MainActivity extends AppCompatActivity implements LocationSource,
         aMap.getUiSettings().setZoomControlsEnabled(false);
 
         aMap.setLocationSource(this);// 设置定位监听
+
         aMap.getUiSettings().setMyLocationButtonEnabled(true);// 设置右上角定位按钮是否显示
         aMap.setMyLocationEnabled(true);// 设置为true表示显示定位层并可触发定位，false表示隐藏定位层并不可触发定位，默认是false
         // 设置定位的类型为定位模式 ，可以由定位、跟随或地图根据面向方向旋转几种
@@ -126,7 +138,7 @@ public class MainActivity extends AppCompatActivity implements LocationSource,
 
         //划线
         aMap.addPolyline(polylineOptions
-                //
+                //另一种设定路径贴图的方法
                 //.setCustomTexture(BitmapDescriptorFactory.fromAsset("blue_road.png"))
                 .add(oldl,newl).geodesic(true));
 
