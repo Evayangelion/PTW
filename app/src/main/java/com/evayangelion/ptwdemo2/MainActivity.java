@@ -1,6 +1,5 @@
 package com.evayangelion.ptwdemo2;
 
-import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -13,10 +12,16 @@ import com.amap.api.location.AMapLocationClient;
 import com.amap.api.location.AMapLocationClientOption;
 import com.amap.api.location.AMapLocationListener;
 import com.amap.api.maps.AMap;
+import com.amap.api.maps.AMapUtils;
 import com.amap.api.maps.CameraUpdateFactory;
 import com.amap.api.maps.LocationSource;
 import com.amap.api.maps.MapView;
+import com.amap.api.maps.model.BitmapDescriptor;
+import com.amap.api.maps.model.BitmapDescriptorFactory;
 import com.amap.api.maps.model.LatLng;
+import com.amap.api.maps.model.Marker;
+import com.amap.api.maps.model.MarkerOptions;
+import com.amap.api.maps.model.MyLocationStyle;
 import com.amap.api.maps.model.PolylineOptions;
 
 
@@ -42,14 +47,15 @@ public class MainActivity extends AppCompatActivity implements LocationSource,
     private RadioGroup mGPSModeGroup;
 
     private TextView mLocationErrText;
+    private TextView getDistance;
+
+    float distance=0;
 
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-
 
         setContentView(R.layout.activity_main);
         //获取地图控件的引用。
@@ -76,50 +82,99 @@ public class MainActivity extends AppCompatActivity implements LocationSource,
         }
         //复选框组合
         mGPSModeGroup = (RadioGroup) findViewById(R.id.gps_radio_group);
+        //为复选框按钮注册监听器
         mGPSModeGroup.setOnCheckedChangeListener(this);
 
+        //文本框内容
         mLocationErrText = (TextView)findViewById(R.id.location_errInfo_text);
         mLocationErrText.setVisibility(View.GONE);
+        getDistance=(TextView)findViewById(R.id.distance);
+        getDistance.setVisibility(View.GONE);
 
+
+        //设置一些aMap属性
+        //放缩开关
         aMap.getUiSettings().setZoomControlsEnabled(false);
 
         aMap.setLocationSource(this);// 设置定位监听
         aMap.getUiSettings().setMyLocationButtonEnabled(true);// 设置右上角定位按钮是否显示
         aMap.setMyLocationEnabled(true);// 设置为true表示显示定位层并可触发定位，false表示隐藏定位层并不可触发定位，默认是false
         // 设置定位的类型为定位模式 ，可以由定位、跟随或地图根据面向方向旋转几种
-        aMap.setMyLocationType(AMap.LOCATION_TYPE_LOCATE);
+        MyLocationStyle myLocationStyle;
+        myLocationStyle=new MyLocationStyle();
+        myLocationStyle.interval(200);
+        aMap.setMyLocationStyle(myLocationStyle);
+        //aMap.setMyLocationType(AMap.LOCATION_TYPE_LOCATE);
     }
 
     /**
-     * 设置一些aMap的属性
+     * 画线
      */
     private void setUpMap(LatLng oldl,LatLng newl) {
-        aMap.addPolyline((new PolylineOptions()).
-                add(oldl,newl).geodesic(true).color(Color.GREEN));
+        //PolylineOptions line;
+
+        //设置纹理
+        //BitmapDescriptorFactory 是bitmap 描述信息工厂类
+        //用于创建BitmapDescriptor 对象。
+        //而BitmapDescriptor 对象则是setCustomTexture要求的参数
+        BitmapDescriptor blueroad= BitmapDescriptorFactory
+                .fromAsset("blue_road.png");
+        PolylineOptions polylineOptions=new PolylineOptions();
+        polylineOptions.setCustomTexture(blueroad);
+        polylineOptions.width(150);
+        //polylineOptions.color(Color.CYAN);
+
+        //划线
+        aMap.addPolyline(polylineOptions
+                //
+                //.setCustomTexture(BitmapDescriptorFactory.fromAsset("blue_road.png"))
+                .add(oldl,newl).geodesic(true));
+
+
+
+        //计算距离
+        distance += AMapUtils.calculateLineDistance(oldl,newl);
+
+        getDistance.setVisibility(View.VISIBLE);
+        String dis="now distance is"+distance;
+        getDistance.setText(dis);
+
     }
 
     @Override
     //点击复选按钮的回调方法
     public void onCheckedChanged(RadioGroup group, int checkedId) {
+        MyLocationStyle myLocationStyle;
+        myLocationStyle=new MyLocationStyle();
+        myLocationStyle.interval(200);
+        aMap.setMyLocationStyle(myLocationStyle);
+
         switch (checkedId) {
             case R.id.gps_locate_button:
                 // 设置定位的类型为定位模式
-                aMap.setMyLocationType(AMap.LOCATION_TYPE_LOCATE);
+                myLocationStyle.myLocationType(MyLocationStyle.LOCATION_TYPE_LOCATE);
+                aMap.setMyLocationStyle(myLocationStyle);
+
+                //aMap.setMyLocationType(AMap.LOCATION_TYPE_LOCATE);
                 aMap.moveCamera(CameraUpdateFactory.zoomTo(13));
 
                 break;
             case R.id.gps_follow_button:
                 // 设置定位的类型为 跟随模式
                 aMap.moveCamera(CameraUpdateFactory.zoomTo(17));
+                myLocationStyle.myLocationType(MyLocationStyle.LOCATION_TYPE_LOCATION_ROTATE_NO_CENTER);
+                aMap.setMyLocationStyle(myLocationStyle);
 
-                aMap.setMyLocationType(AMap.LOCATION_TYPE_MAP_FOLLOW);
+                //aMap.setMyLocationType(AMap.LOCATION_TYPE_MAP_FOLLOW);
                 break;
             case R.id.gps_rotate_button:
                 // 设置定位的类型为根据地图面向方向旋转
 
                 aMap.moveCamera(CameraUpdateFactory.zoomTo(6));
+                myLocationStyle.myLocationType(MyLocationStyle.LOCATION_TYPE_MAP_ROTATE_NO_CENTER);
+                aMap.setMyLocationStyle(myLocationStyle);
 
-                aMap.setMyLocationType(AMap.LOCATION_TYPE_MAP_ROTATE);
+                //aMap.setMyLocationType(AMap.LOCATION_TYPE_MAP_ROTATE);
                 break;
         }
 
@@ -190,6 +245,9 @@ public class MainActivity extends AppCompatActivity implements LocationSource,
                 if(oldLatLng!=newLatLng){
                     Log.e("Amap",+amapLocation.getLatitude()+","+amapLocation.getLongitude());
                     setUpMap(oldLatLng,newLatLng);
+
+                    //每进行一次定位 生成一个marker做一次标记
+                    Marker marker=aMap.addMarker(new MarkerOptions().position(newLatLng).title("new").snippet("DefaultMarker"));
                     oldLatLng=newLatLng;
 
                 }
@@ -203,6 +261,13 @@ public class MainActivity extends AppCompatActivity implements LocationSource,
             }
         }
     }
+
+
+    /**
+     * activate和deactivate是
+     * LocationSource 的接口
+     *
+     */
 
     /**
      * 激活定位
@@ -219,6 +284,9 @@ public class MainActivity extends AppCompatActivity implements LocationSource,
             mLocationOption.setLocationMode(AMapLocationClientOption.AMapLocationMode.Hight_Accuracy);
             //设置定位参数
             mlocationClient.setLocationOption(mLocationOption);
+            //设置定位间隔
+            mLocationOption.setInterval(1000);
+
             // 此方法为每隔固定时间会发起一次定位请求，为了减少电量消耗或网络流量消耗，
             // 注意设置合适的定位时间的间隔（最小间隔支持为2000ms），并且在合适时间调用stopLocation()方法来取消定位请求
             // 在定位结束后，在合适的生命周期调用onDestroy()方法

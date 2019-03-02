@@ -52,4 +52,13 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         />
+
+    <TextView
+        android:id="@+id/distance"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:textColor="#00ff00"
+        />
+
 </RelativeLayout>
