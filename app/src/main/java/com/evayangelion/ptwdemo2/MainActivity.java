@@ -26,7 +26,7 @@ import com.amap.api.maps.model.PolylineOptions;
 
 
 public class MainActivity extends AppCompatActivity implements LocationSource,
-        AMapLocationListener,RadioGroup.OnCheckedChangeListener {
+        AMapLocationListener {
 
 
     private AMap aMap;
@@ -58,7 +58,10 @@ public class MainActivity extends AppCompatActivity implements LocationSource,
         super.onCreate(savedInstanceState);
 
         //隐藏标题栏
-        //requestWindowFeature(Window.FEATURE_NO_TITLE);
+        if(getSupportActionBar()!=null){
+            getSupportActionBar().hide();
+        }
+
         setContentView(R.layout.activity_main);
         //获取地图控件的引用。
         mapView = (MapView) findViewById(R.id.map);
@@ -90,9 +93,9 @@ public class MainActivity extends AppCompatActivity implements LocationSource,
             });
         }
         //复选框组合
-        mGPSModeGroup = (RadioGroup) findViewById(R.id.gps_radio_group);
+       // mGPSModeGroup = (RadioGroup) findViewById(R.id.gps_radio_group);
         //为复选框按钮注册监听器
-        mGPSModeGroup.setOnCheckedChangeListener(this);
+       // mGPSModeGroup.setOnCheckedChangeListener(this);
 
         //文本框内容
         //报错文本
@@ -111,12 +114,16 @@ public class MainActivity extends AppCompatActivity implements LocationSource,
 
         aMap.getUiSettings().setMyLocationButtonEnabled(true);// 设置右上角定位按钮是否显示
         aMap.setMyLocationEnabled(true);// 设置为true表示显示定位层并可触发定位，false表示隐藏定位层并不可触发定位，默认是false
-        // 设置定位的类型为定位模式 ，可以由定位、跟随或地图根据面向方向旋转几种
+
+        // 设置定位的类型为定位模式
         MyLocationStyle myLocationStyle;
         myLocationStyle=new MyLocationStyle();
         myLocationStyle.interval(200);
-        aMap.setMyLocationStyle(myLocationStyle);
         //aMap.setMyLocationType(AMap.LOCATION_TYPE_LOCATE);
+
+        aMap.moveCamera(CameraUpdateFactory.zoomTo(17));
+        myLocationStyle.myLocationType(MyLocationStyle.LOCATION_TYPE_LOCATION_ROTATE_NO_CENTER);
+        aMap.setMyLocationStyle(myLocationStyle);
     }
 
     /**
@@ -133,7 +140,8 @@ public class MainActivity extends AppCompatActivity implements LocationSource,
                 .fromAsset("blue_road.png");
         PolylineOptions polylineOptions=new PolylineOptions();
         polylineOptions.setCustomTexture(blueroad);
-        polylineOptions.width(150);
+
+        polylineOptions.width(100);
         //polylineOptions.color(Color.CYAN);
 
         //划线
@@ -153,44 +161,6 @@ public class MainActivity extends AppCompatActivity implements LocationSource,
 
     }
 
-    @Override
-    //点击复选按钮的回调方法
-    public void onCheckedChanged(RadioGroup group, int checkedId) {
-        MyLocationStyle myLocationStyle;
-        myLocationStyle=new MyLocationStyle();
-        myLocationStyle.interval(200);
-        aMap.setMyLocationStyle(myLocationStyle);
-
-        switch (checkedId) {
-            case R.id.gps_locate_button:
-                // 设置定位的类型为定位模式
-                myLocationStyle.myLocationType(MyLocationStyle.LOCATION_TYPE_LOCATE);
-                aMap.setMyLocationStyle(myLocationStyle);
-
-                //aMap.setMyLocationType(AMap.LOCATION_TYPE_LOCATE);
-                aMap.moveCamera(CameraUpdateFactory.zoomTo(13));
-
-                break;
-            case R.id.gps_follow_button:
-                // 设置定位的类型为 跟随模式
-                aMap.moveCamera(CameraUpdateFactory.zoomTo(17));
-                myLocationStyle.myLocationType(MyLocationStyle.LOCATION_TYPE_LOCATION_ROTATE_NO_CENTER);
-                aMap.setMyLocationStyle(myLocationStyle);
-
-                //aMap.setMyLocationType(AMap.LOCATION_TYPE_MAP_FOLLOW);
-                break;
-            case R.id.gps_rotate_button:
-                // 设置定位的类型为根据地图面向方向旋转
-
-                aMap.moveCamera(CameraUpdateFactory.zoomTo(6));
-                myLocationStyle.myLocationType(MyLocationStyle.LOCATION_TYPE_MAP_ROTATE_NO_CENTER);
-                aMap.setMyLocationStyle(myLocationStyle);
-
-                //aMap.setMyLocationType(AMap.LOCATION_TYPE_MAP_ROTATE);
-                break;
-        }
-
-    }
 
     /**
      * 方法必须重写
