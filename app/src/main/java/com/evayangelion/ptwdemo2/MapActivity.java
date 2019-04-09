@@ -105,7 +105,6 @@ public class MapActivity extends AppCompatActivity implements LocationSource,
         getDistance=(TextView)findViewById(R.id.distance);
         getDistance.setVisibility(View.GONE);
 
-
         //设置一些aMap属性
         //放缩开关
         aMap.setMaxZoomLevel(17);
