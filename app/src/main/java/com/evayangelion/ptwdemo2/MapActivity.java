@@ -25,7 +25,7 @@ import com.amap.api.maps.model.MyLocationStyle;
 import com.amap.api.maps.model.PolylineOptions;
 
 
-public class MainActivity extends AppCompatActivity implements LocationSource,
+public class MapActivity extends AppCompatActivity implements LocationSource,
         AMapLocationListener {
 
 
@@ -62,7 +62,7 @@ public class MainActivity extends AppCompatActivity implements LocationSource,
             getSupportActionBar().hide();
         }
 
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_map);
         //获取地图控件的引用。
         mapView = (MapView) findViewById(R.id.map);
         mapView.onCreate(savedInstanceState);// 此方法必须重写
@@ -108,7 +108,8 @@ public class MainActivity extends AppCompatActivity implements LocationSource,
 
         //设置一些aMap属性
         //放缩开关
-        aMap.getUiSettings().setZoomControlsEnabled(false);
+        aMap.setMaxZoomLevel(17);
+        aMap.setMinZoomLevel(15);
 
         aMap.setLocationSource(this);// 设置定位监听
 
@@ -149,7 +150,6 @@ public class MainActivity extends AppCompatActivity implements LocationSource,
                 //另一种设定路径贴图的方法
                 //.setCustomTexture(BitmapDescriptorFactory.fromAsset("blue_road.png"))
                 .add(oldl,newl).geodesic(true));
-
 
 
         //计算距离
@@ -212,7 +212,7 @@ public class MainActivity extends AppCompatActivity implements LocationSource,
                     && amapLocation.getErrorCode() == 0) {
                 mLocationErrText.setVisibility(View.GONE);
 
-                //Toast.makeText(MainActivity.this,"SHISHI",Toast.LENGTH_SHORT).show();
+                //Toast.makeText(LoginActivity.this,"SHISHI",Toast.LENGTH_SHORT).show();
                 Log.d("===纬度：",""+amapLocation.getLatitude());
                 Log.d("===经度：",""+amapLocation.getLongitude());
 
