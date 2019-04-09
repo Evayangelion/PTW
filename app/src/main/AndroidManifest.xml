@@ -52,6 +52,8 @@
 
 
 
+        //所有要用的activity都要在这里declare
+        <activity android:name=".MapActivity"/>
         <activity android:name=".MainMenu" />
         <activity android:name=".register"></activity>
         <activity

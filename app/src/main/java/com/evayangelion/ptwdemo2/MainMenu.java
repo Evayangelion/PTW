@@ -6,10 +6,18 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
+import android.widget.TextView;
 
 public class MainMenu extends AppCompatActivity {
 
-    //private TextView mTextMessage;
+    TextView mTextMessage;
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_map);
+        BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
+        navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
+    }
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
             = new BottomNavigationView.OnNavigationItemSelectedListener() {
@@ -23,26 +31,19 @@ public class MainMenu extends AppCompatActivity {
                     startActivity(intent_home);
                     return true;
                 case R.id.navigation_dashboard:
-                    //mTextMessage.setText("dashbord");
+                   // mTextMessage.setText("dashbord");
                     return true;
                 case R.id.navigation_notifications:
                     Intent intent_my=new Intent(MainMenu.this,myActivity.class);
                     startActivity(intent_my);
 
-                     //mTextMessage.setText("个人中心");
+                    //mTextMessage.setText("个人中心");
                     return true;
             }
             return false;
         }
         };
-        @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_welcome);
 
-
-
-        }
 
     }
 
