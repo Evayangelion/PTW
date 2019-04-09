@@ -48,7 +48,6 @@ public class MainMenu extends AppCompatActivity implements LocationSource,
 
     private TextView mLocationErrText;
     private TextView getDistance;
-
     float distance=0;
 
 
@@ -60,10 +59,10 @@ public class MainMenu extends AppCompatActivity implements LocationSource,
             getSupportActionBar().hide();
         }
         setContentView(R.layout.activity_map);
+
         BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
 
-        setContentView(R.layout.activity_map);
         //获取地图控件的引用。
         mapView = (MapView) findViewById(R.id.map);
         mapView.onCreate(savedInstanceState);// 此方法必须重写
@@ -304,10 +303,6 @@ public class MainMenu extends AppCompatActivity implements LocationSource,
         }
         mlocationClient = null;
     }
-
-
-
-
 
     }
 

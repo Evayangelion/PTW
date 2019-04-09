@@ -61,7 +61,7 @@ public class myActivity extends AppCompatActivity {
             switch (item.getItemId()) {
                 case R.id.navigation_home:
                     //mTextMessage.setText("home");
-                    Intent intent_home = new Intent(myActivity.this, LoginActivity.class);
+                    Intent intent_home = new Intent(myActivity.this, MainMenu.class);
                     startActivity(intent_home);
                     return true;
                 case R.id.navigation_dashboard:
@@ -105,6 +105,9 @@ public class myActivity extends AppCompatActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_my);
+
+        BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
+        navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
 
         Button takePhoto = (Button) findViewById(R.id.take_photo);
         Button chooseFromAlbum = (Button) findViewById(R.id.choose_from_album);

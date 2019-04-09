@@ -51,10 +51,19 @@
         </meta-data>
 
 
-
         //所有要用的activity都要在这里declare
-        <activity android:name=".MapActivity"/>
-        <activity android:name=".MainMenu" />
+        <activity android:name=".Change_password_Activity"></activity>
+        <activity android:name=".dailybattleActivity"></activity>
+        <activity android:name=".helpActivity"></activity>
+        <activity android:name=".historyactivity"></activity>
+        <activity android:name=".markActivity"></activity>
+        <activity android:name=".personal_info"></activity>
+        <activity android:name=".personalportrait"></activity>
+        <activity android:name=".ques1Activity"></activity>
+        <activity android:name=".ques2Activity"></activity>
+        <activity android:name=".setActivity"></activity>
+        <activity android:name=".MainMenu" ></activity>
+        <activity android:name=".myActivity"></activity>
         <activity android:name=".register"></activity>
         <activity
             android:name="com.tencent.tauth.AuthActivity"

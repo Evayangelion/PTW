@@ -30,6 +30,8 @@ dependencies {
     })
     compile 'com.makeramen:roundedimageview:2.2.1'
     compile 'com.android.support:appcompat-v7:26.+'
+    compile 'com.android.support.constraint:constraint-layout:1.0.2'
+
     testCompile 'junit:junit:4.12'
     compile files('libs/AMap3DMap_6.6.0_AMapNavi_6.5.0_AMapSearch_6.5.0_AMapTrack_1.0.0_AMapLocation_4.4.0_20181221.jar')
     compile files('libs/open_sdk_r6008_lite.jar')
