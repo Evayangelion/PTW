@@ -16,6 +16,10 @@ public class setActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        //隐藏标题栏
+        if(getSupportActionBar()!=null){
+            getSupportActionBar().hide();
+        }
         setContentView(R.layout.activity_set);
         ArrayAdapter<String>adapter=new ArrayAdapter<String>(
                 setActivity.this,android.R.layout.simple_list_item_1,setitem);

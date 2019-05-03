@@ -11,6 +11,10 @@ public class helpActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        //隐藏标题栏
+        if(getSupportActionBar()!=null){
+            getSupportActionBar().hide();
+        }
         setContentView(R.layout.activity_help);
         TextView ques1=(TextView)findViewById(R.id.ques1);
         TextView ques2=(TextView)findViewById(R.id.ques2);

@@ -68,6 +68,7 @@ public class MainMenu extends AppCompatActivity implements LocationSource,
         mapView.onCreate(savedInstanceState);// 此方法必须重写
         isFirstLatLng=true;
 
+
         init();
 
     }
@@ -124,17 +125,18 @@ public class MainMenu extends AppCompatActivity implements LocationSource,
         //设置一些aMap属性
         //放缩开关
         aMap.setMaxZoomLevel(17);
-        aMap.setMinZoomLevel(15);
+        //aMap.setMinZoomLevel(15);
 
         aMap.setLocationSource(this);// 设置定位监听
 
+        aMap.getUiSettings().setScaleControlsEnabled(false);
         aMap.getUiSettings().setMyLocationButtonEnabled(true);// 设置右上角定位按钮是否显示
         aMap.setMyLocationEnabled(true);// 设置为true表示显示定位层并可触发定位，false表示隐藏定位层并不可触发定位，默认是false
 
         // 设置定位的类型为定位模式
         MyLocationStyle myLocationStyle;
         myLocationStyle=new MyLocationStyle();
-        myLocationStyle.interval(200);
+        myLocationStyle.interval(1000);
         //aMap.setMyLocationType(AMap.LOCATION_TYPE_LOCATE);
 
         aMap.moveCamera(CameraUpdateFactory.zoomTo(17));
@@ -280,6 +282,8 @@ public class MainMenu extends AppCompatActivity implements LocationSource,
             mLocationOption.setLocationMode(AMapLocationClientOption.AMapLocationMode.Hight_Accuracy);
             //设置定位参数
             mlocationClient.setLocationOption(mLocationOption);
+            mLocationOption.setOnceLocation(false);
+            mLocationOption.setGpsFirst(true);
             //设置定位间隔
             mLocationOption.setInterval(1000);
 

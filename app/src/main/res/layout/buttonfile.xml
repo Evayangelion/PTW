@@ -19,7 +19,6 @@
             android:layout_weight="1"/>-->
 
 
-
         <android.support.design.widget.BottomNavigationView
             android:id="@+id/navigation"
             android:layout_width="match_parent"
@@ -28,10 +27,13 @@
             android:layout_gravity="bottom"
             android:background="?android:attr/windowBackground"
             app:menu="@menu/navigation"
+
             app:itemBackground="@android:color/holo_purple"
+
             app:itemIconTint="@android:color/white"
             app:itemTextColor="@android:color/white"
             />
+        <!--holo pruple aa66cc-->
         <!--
         app:itemBackground="@android:color/black"
         app:itemIconTint="@android:color/white"

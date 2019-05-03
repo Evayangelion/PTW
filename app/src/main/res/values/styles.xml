@@ -3,9 +3,14 @@
     <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
         <!-- Customize your theme here. -->
-        <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
-        <item name="colorAccent">@color/colorAccent</item>
+        <item name="colorPrimary">@color/colorDove</item>
+        <!-- 上面是标题栏颜色-->
+        <item name="colorPrimaryDark">@color/colorDove</item>
+        <!-- 上面是导航栏颜色-->
+
+        <item name="colorAccent">@color/colorDove</item>
+        <!-- 上面是选择按钮颜色-->
+
     </style>
 
 </resources>
